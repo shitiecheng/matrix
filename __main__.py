@@ -113,7 +113,7 @@ while True:
         g.draw(screen)
         if g.__len__() == 0:
             groups.remove(g)
-    print('当前字幕雨数量:', groups.__len__())
+    # print('当前字幕雨数量:', groups.__len__())
     if groups.__len__() < MAX_WORD_RAIN:
         for i in range(MAX_WORD_INCREASEMENT):
             if groups.__len__() < MAX_WORD_RAIN:
