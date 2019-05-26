@@ -1,4 +1,7 @@
+# pygame version: 1.9.3
+
 try:
+    import time
     import pygame
     import sys
     from pygame.locals import *
@@ -76,7 +79,7 @@ class Word(pygame.sprite.Sprite):
             self.kill()
 
 
-# 8位字符组
+# 8位二进制字符组(如:10000001)
 class WordGroup(pygame.sprite.Group):
     def __init__(self, born_position_x, born_position_y, char_seq, speed, font_size):
         pygame.sprite.Group.__init__(self)
@@ -91,15 +94,38 @@ class WordGroup(pygame.sprite.Group):
                 self.add(Word((born_position_x, born_position_y * i), char_seq[i], speed, font_size, deep_green_color()))
 
 
+# fps浮窗
+class Fps(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.value = 0
+        self.font = pygame.font.SysFont("arial", 25)
+        self.image = self.font.render(str(self.value), True, green_color())
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (50, 50)
+
+    def update(self, value):
+        self.value = 'fps:' + value
+        self.font = pygame.font.SysFont("arial", 25)
+        self.image = self.font.render(str(self.value), True, green_color())
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (50, 50)
+
+
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("字幕雨")
 
-# 初始化字幕雨list 存放所有的单个字幕组
+# 初始化字幕雨list 存放所有的单个字幕组update() missing 1 required positional argument: 'self'
 groups = [WordGroup(randint(0, SCREEN_WIDTH), -FONT_SIZE, random_byte32(), random_speed(),
                     randint(LOW_SIZE, HIGH_SIZE))]
+# fps显示
+group_fps = pygame.sprite.Group()
+group_fps.add(Fps())
+time_stamp = time.time() * 1000
+fps_time_stamp = time.time() * 1000
 
-
+group_fps.draw(screen)
 while True:
 
     for event in pygame.event.get():
@@ -124,4 +150,12 @@ while True:
             else:
                 break
 
+    now = time.time() * 1000
+    use_time = now - time_stamp
+    if now - fps_time_stamp >= 1000:
+        print('fps: ', 1000 / use_time)
+        group_fps.update(str(1000 / use_time))
+        fps_time_stamp = now
+    group_fps.draw(screen)
     pygame.display.update()
+    time_stamp = now
