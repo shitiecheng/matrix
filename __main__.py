@@ -22,7 +22,6 @@ HIGH_SPEED = 30
 LOW_SIZE = 5
 HIGH_SIZE = 30
 FONT_SIZE = 20
-FREQUENCE = 30
 
 # 屏幕最大允许的字幕雨数量
 MAX_WORD_RAIN = 128
@@ -117,8 +116,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("字幕雨")
 
 # 初始化字幕雨list 存放所有的单个字幕组update() missing 1 required positional argument: 'self'
-groups = [WordGroup(randint(0, SCREEN_WIDTH), -FONT_SIZE, random_byte32(), random_speed(),
-                    randint(LOW_SIZE, HIGH_SIZE))]
+font_size = random_font_size()
+groups = [WordGroup(randint(0, SCREEN_WIDTH), -font_size, random_byte32(), random_speed(),
+                    font_size)]
 # fps显示
 group_fps = pygame.sprite.Group()
 group_fps.add(Fps())
