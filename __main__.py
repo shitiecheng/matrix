@@ -15,8 +15,8 @@ SCREEN_WIDTH = 1366
 SCREEN_HEIGHT = 768
 
 # 速度区间
-LOW_SPEED = 7
-HIGH_SPEED = 30
+LOW_SPEED = 3
+HIGH_SPEED = 15
 
 # 文字大小区间
 LOW_SIZE = 5
@@ -65,7 +65,7 @@ class Word(pygame.sprite.Sprite):
     def __init__(self, bornposition, value, speed, font_size, color):
         pygame.sprite.Sprite.__init__(self)
         self.value = value
-        self.font = pygame.font.SysFont("arial", font_size)
+        self.font = pygame.font.SysFont("Consolas", font_size)
         self.image = self.font.render(str(self.value), True, color)
 
         self.speed = speed
@@ -113,12 +113,11 @@ class Fps(pygame.sprite.Sprite):
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("字幕雨")
+pygame.display.set_caption("the matrix code rain")
 
-# 初始化字幕雨list 存放所有的单个字幕组update() missing 1 required positional argument: 'self'
-font_size = random_font_size()
-groups = [WordGroup(randint(0, SCREEN_WIDTH), -font_size, random_byte32(), random_speed(),
-                    font_size)]
+# 初始化字幕雨list 存放所有的字幕组
+groups = []
+
 # fps显示
 group_fps = pygame.sprite.Group()
 group_fps.add(Fps())
@@ -134,6 +133,7 @@ while True:
             exit()
     screen.fill((0, 0, 0))
 
+    # 遍历所有的字幕组 执行update
     for g in groups:
         g.update()
         g.draw(screen)
@@ -153,7 +153,7 @@ while True:
     now = time.time() * 1000
     use_time = now - time_stamp
     if now - fps_time_stamp >= 1000:
-        print('fps: ', 1000 / use_time)
+        # print('fps: ', 1000 / use_time)
         group_fps.update(str(1000 / use_time))
         fps_time_stamp = now
     group_fps.draw(screen)
